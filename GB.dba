@@ -1,0 +1,171 @@
+sync on
+sync rate 35
+hide mouse
+
+load image "buster.bmp",1
+load image "casper.jpg",2
+load image "casper2.jpg",4
+load image "ammo.bmp",3
+load music "gbusters.mid",1
+play music 1
+
+level=1
+
+for x=0 to 5
+
+cls
+print "Level #",level
+
+coll1=0
+coll2=0
+coll3=0
+coll4=0
+coll5=0
+
+bullet_use=0
+bullety=0
+bulletx=0
+
+busterxstart=20
+busterystart=5
+
+ghost1xspeed=-2-(level)
+ghost1yspeed=1+(level)
+ghost1xstart=100
+ghost1ystart=100
+
+ghost2xspeed=-2-(level)
+ghost2yspeed=2+(level)
+ghost2xstart=200
+ghost2ystart=200
+
+ghost3xspeed=3+(level)
+ghost3yspeed=2+(level)
+ghost3xstart=300
+ghost3ystart=300
+
+ghost4xspeed=2+(level)
+ghost4yspeed=3+(level)
+ghost4xstart=400
+ghost4ystart=400
+
+ghost5xspeed=.5+(level)
+ghost5yspeed=-3-(level)
+ghost5xstart=50
+ghost5ystart=400
+
+repeat
+sync
+
+sprite 1,busterxstart,busterystart,1
+if coll1=0
+sprite 2,ghost1xstart,ghost1ystart,2
+endif
+if coll2=0
+sprite 3,ghost2xstart,ghost2ystart,2
+endif
+if coll3=0
+sprite 4,ghost3xstart,ghost3ystart,2
+endif
+if coll4=0
+sprite 5,ghost4xstart,ghost4ystart,2
+endif
+if coll5=0
+sprite 6,ghost5xstart,ghost5ystart,2
+endif
+
+if coll1=1
+sprite 2,ghost1xstart,ghost1ystart,4
+endif
+if coll2=1
+sprite 3,ghost2xstart,ghost2ystart,4
+endif
+if coll3=1
+sprite 4,ghost3xstart,ghost3ystart,4
+endif
+if coll4=1
+sprite 5,ghost4xstart,ghost4ystart,4
+endif
+if coll5=1
+sprite 6,ghost5xstart,ghost5ystart,4
+endif
+
+if leftkey()=1 then busterxstart=busterxstart-9
+if rightkey()=1 then busterxstart=busterxstart+9
+if upkey()=1 then busterystart=busterystart-9
+if downkey()=1 then busterystart=busterystart+9
+if spacekey()=1 then	bullet_use=1 : bullety=busterystart : bulletx=busterxstart
+
+if bullet_use=1
+		sprite 7,bulletx+30,bullety+20,3
+		bulletx=bulletx+15
+endif
+
+if busterxstart<=0 then busterxstart=0
+if busterystart<=0 then busterystart=0
+if busterystart>=410 then busterystart=410
+if busterxstart>=580 then busterxstart=580
+
+if ghost1xstart<=0 then ghost1xspeed=1+(level)
+if ghost1ystart<=0 then ghost1yspeed=5+(level)
+if ghost1ystart>=440 then ghost1yspeed=-.5-(level)
+if ghost1xstart>=620 then ghost1xspeed=-3-(level)
+ghost1xstart=ghost1xstart+ghost1xspeed
+ghost1ystart=ghost1ystart+ghost1yspeed
+
+if ghost2xstart<=0 then ghost2xspeed=7+(level)
+if ghost2ystart<=0 then ghost2yspeed=7+(level)
+if ghost2ystart>=440 then ghost2yspeed=-3-(level)
+if ghost2xstart>=620 then ghost2xspeed=-5-(level)
+ghost2xstart=ghost2xstart+ghost2xspeed
+ghost2ystart=ghost2ystart+ghost2yspeed
+
+if ghost3xstart<=0 then ghost3xspeed=6+(level)
+if ghost3ystart<=0 then ghost3yspeed=.5+(level)
+if ghost3ystart>=440 then ghost3yspeed=-3-(level)
+if ghost3xstart>=620 then ghost3xspeed=-.5-(level)
+ghost3xstart=ghost3xstart+ghost3xspeed
+ghost3ystart=ghost3ystart+ghost3yspeed
+
+if ghost4xstart<=0 then ghost4xspeed=.5+(level)
+if ghost4ystart<=0 then ghost4yspeed=2+(level)
+if ghost4ystart>=440 then ghost4yspeed=-3-(level)
+if ghost4xstart>=620 then ghost4xspeed=-6-(level)
+ghost4xstart=ghost4xstart+ghost4xspeed
+ghost4ystart=ghost4ystart+ghost4yspeed
+
+if ghost5xstart<=0 then ghost5xspeed=3+(level)
+if ghost5ystart<=0 then ghost5yspeed=9+(level)
+if ghost5ystart>=440 then ghost5yspeed=-3-(level)
+if ghost5xstart>=620 then ghost5xspeed=-7-(level)
+ghost5xstart=ghost5xstart+ghost5xspeed
+ghost5ystart=ghost5ystart+ghost5yspeed
+
+for hit=2 to 6
+if sprite collision(1,hit)=1 
+center text 320,240,"You have been hit by a ghost and died"
+suspend for key
+end
+endif
+next hit
+
+if bullet_use=1
+if sprite collision(7,2)=1 then delete sprite 2 : coll1=coll1+1 : bullet_use=0 : delete sprite 7
+if sprite collision(7,3)=1 then delete sprite 3 : coll2=coll2+1 : bullet_use=0 : delete sprite 7
+if sprite collision(7,4)=1 then delete sprite 4 : coll3=coll3+1 : bullet_use=0 : delete sprite 7
+if sprite collision(7,5)=1 then delete sprite 5 : coll4=coll4+1 : bullet_use=0 : delete sprite 7
+if sprite collision(7,6)=1 then delete sprite 6 : coll5=coll5+1 : bullet_use=0 : delete sprite 7
+endif
+
+until coll1=2 & coll2=2 & coll3=2 & coll4=2 & coll5=2
+center text 320,240,"You busted all the ghosts"
+level=level+1
+suspend for key
+next x
+
+cls
+center text 320,240,"You busted all the ghosts in each level"
+
+end
+
+
